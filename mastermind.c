@@ -4,6 +4,7 @@
 #include <process.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 
 #define xstr(x) #x
 #define str(x)  xstr(x)
@@ -199,9 +200,25 @@ void draw_interface(CODE propositions[], CODE secret, int current){
         }
     }
 }
+
+void generate_random_secret(CODE secret){
+    srand(time(NULL));
+    for (int i = 0; i < CODE_SIZE; i++)
+    {   
+        int random_color = rand()%4+1;
+        while(in_set(secret, random_color, CODE_SIZE)){
+            random_color = rand()%4+1;
+        }
+
+        secret[i] = random_color;
+    }
+}
+
 int main(int argc, char **argv) {
-    CODE secret = {1,2,3,4}; 
+    CODE secret = {0}; 
     CODE propositions[NUM_TRIES];
+    generate_random_secret(secret);
+    
     init_propostions(propositions);
     init_interface();
     int try_count = 0;
